@@ -1,7 +1,5 @@
 function randommaze () {
     tiles.setCurrentTilemap(tilemap`level2`)
-    lastrow = 32
-    lastcolumn = 32
     cursor = sprites.create(img`
         . . . . . . . . . . . . . . . . 
         . f f f f f f f f f f f f f f . 
@@ -21,26 +19,11 @@ function randommaze () {
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.Player)
     tiles.placeOnTile(cursor, tiles.getTileLocation(0, 0))
-    scene.cameraFollowSprite(cursor)
     visitedcells = [cursor.tilemapLocation()]
     while (visitedcells.length > 0) {
         currentcell = visitedcells.pop()
         tiles.placeOnTile(cursor, currentcell)
         tiles.setTileAt(currentcell, sprites.dungeon.floorLight2)
-        candidatelocations = []
-        if (cursor.tilemapLocation().column < lastcolumn && cursor.tileKindAt(TileDirection.Right, assets.tile`transparency16`)) {
-            candidatelocations.push(tiles.getTileLocation(cursor.tilemapLocation().column + 1, cursor.tilemapLocation().row))
-        }
-        if (cursor.tilemapLocation().column > 0 && cursor.tileKindAt(TileDirection.Left, assets.tile`transparency16`)) {
-            candidatelocations.push(tiles.getTileLocation(cursor.tilemapLocation().column - 1, cursor.tilemapLocation().row))
-        }
-        if (cursor.tilemapLocation().row > 0 && cursor.tileKindAt(TileDirection.Top, assets.tile`transparency16`)) {
-            candidatelocations.push(tiles.getTileLocation(cursor.tilemapLocation().column, cursor.tilemapLocation().row - 1))
-        }
-        if (cursor.tilemapLocation().row < lastrow && cursor.tileKindAt(TileDirection.Bottom, assets.tile`transparency16`)) {
-            candidatelocations.push(tiles.getTileLocation(cursor.tilemapLocation().column, cursor.tilemapLocation().row + 1))
-        }
-        branch = cursor.tilemapLocation()
     }
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
@@ -50,13 +33,9 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
         game.gameOver(true)
     }
 })
-let branch: tiles.Location = null
-let candidatelocations: tiles.Location[] = []
 let currentcell: tiles.Location = null
 let visitedcells: tiles.Location[] = []
 let cursor: Sprite = null
-let lastcolumn = 0
-let lastrow = 0
 let flamelist: tiles.Location[] = []
 tiles.setCurrentTilemap(tilemap`level3`)
 let user = sprites.create(img`
