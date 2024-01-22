@@ -26,10 +26,5 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "blockprj",
-    "yotta": {
-        "config": {
-            "PXT_GC_CHECKS": 1
-        }
-    }
+    "preferredEditor": "blocksprj"
 }
