@@ -41,6 +41,27 @@ function randommaze () {
             candidatelocations.push(tiles.getTileLocation(cursor.tilemapLocation().column, cursor.tilemapLocation().row + 1))
         }
         branch = cursor.tilemapLocation()
+        while (candidatelocations.length > 0) {
+            let list: tiles.Location[] = []
+            tiles.placeOnTile(cursor, list.removeAt(randint(0, candidatelocations.length - 1)))
+            count = 0
+            if (cursor.tileKindAt(TileDirection.Left, sprites.dungeon.floorLight2)) {
+                count += 1
+            }
+            if (cursor.tileKindAt(TileDirection.Right, sprites.dungeon.floorLight2)) {
+                count += 1
+            }
+            if (cursor.tileKindAt(TileDirection.Top, sprites.dungeon.floorLight2)) {
+                count += 1
+            }
+            if (cursor.tileKindAt(TileDirection.Bottom, sprites.dungeon.floorLight2)) {
+                count += 1
+            }
+            if (count == 1 || Math.percentChance(25) && count == 2) {
+                visitedcells.push(branch)
+                visitedcells.push(cursor.tilemapLocation())
+            }
+        }
     }
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
@@ -50,6 +71,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
         game.gameOver(true)
     }
 })
+let count = 0
 let branch: tiles.Location = null
 let candidatelocations: tiles.Location[] = []
 let currentcell: tiles.Location = null
