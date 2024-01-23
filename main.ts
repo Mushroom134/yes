@@ -1,3 +1,6 @@
+namespace SpriteKind {
+    export const Nomnom = SpriteKind.create()
+}
 function randommaze () {
     tiles.setCurrentTilemap(tilemap`level2`)
     lastrow = 32
@@ -71,11 +74,35 @@ function randommaze () {
         tiles.setWallAt(value, true)
     }
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Nomnom, function (sprite, otherSprite) {
+    if (sprite == mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.One)) && Flame1.image.equals(img`
+        . . . . . . f f f . . . . . . . 
+        . . . . . . f 8 f f . . . . . . 
+        . . . . . . f f 8 f f . f . . . 
+        . . . . . . . f 8 8 f . . . . . 
+        . . . . . . f f 8 9 8 f . . . . 
+        . . . . . . f 8 8 9 8 f . . . . 
+        . . . . . f f 8 9 9 8 f f . . . 
+        . . . . . f 8 9 9 9 8 8 f . . . 
+        . . . f f 8 9 9 9 1 9 8 f . . . 
+        . . f f 8 8 9 9 1 1 9 8 f f . . 
+        . f f 8 9 9 9 1 9 1 9 8 8 f . . 
+        . f 8 9 9 1 9 9 1 9 9 9 8 f . . 
+        . f 8 9 9 9 1 9 1 1 9 9 8 f . . 
+        . f 8 8 9 1 1 1 1 1 9 9 8 f . . 
+        . f f 8 9 9 1 1 1 1 9 8 8 f . . 
+        . . . f 8 9 1 1 1 9 9 8 f f . . 
+        `)) {
+        sprites.destroy(otherSprite, effects.clouds, 100)
+    } else {
+        mp.changePlayerStateBy(mp.playerSelector(mp.PlayerNumber.Two), MultiplayerState.score, 0)
+    }
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
-    flamelist.push(otherSprite.tilemapLocation())
-    sprites.destroy(otherSprite, effects.fire, 100)
-    if (flamelist.length == 5) {
-        game.gameOver(true)
+    if (sprite == mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.Two)) && Gasoline1.image.equals(assets.image`myImage`)) {
+        sprites.destroy(otherSprite, effects.halo, 100)
+    } else {
+        mp.changePlayerStateBy(mp.playerSelector(mp.PlayerNumber.One), MultiplayerState.score, 0)
     }
 })
 let wall_tile: tiles.Location[] = []
@@ -88,52 +115,153 @@ let visitedcells: tiles.Location[] = []
 let cursor: Sprite = null
 let lastcolumn = 0
 let lastrow = 0
-let flamelist: tiles.Location[] = []
+let Flame1: Sprite = null
+let Gasoline1: Sprite = null
 tiles.setCurrentTilemap(tilemap`level3`)
-let user = sprites.create(img`
+splitScreen.setSplitScreenEnabled(true)
+splitScreen.setCameraRegion(splitScreen.Camera.Camera1, splitScreen.CameraRegion.HorizontalTopHalf)
+splitScreen.setCameraRegion(splitScreen.Camera.Camera2, splitScreen.CameraRegion.HorizontalBottomHalf)
+splitScreen.setBorderColor(15)
+mp.setPlayerSprite(mp.playerSelector(mp.PlayerNumber.One), sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . 5 5 5 5 5 . . . . . . 
+    . . 5 5 5 5 5 5 5 5 . . . . . . 
+    . . . . . . . . . 5 5 . . . . . 
+    5 . . . . . 5 5 5 5 5 5 . . . . 
+    5 5 5 . . 5 5 5 5 5 5 f 1 . . . 
+    5 5 5 5 . 5 5 5 5 5 5 f f 5 . . 
+    . . 5 5 5 5 5 4 5 5 5 5 5 5 5 . 
+    . . 5 5 5 5 5 5 4 4 5 5 5 5 5 . 
+    . 5 5 4 4 4 4 5 5 5 5 5 4 4 . . 
+    5 5 4 4 . . 4 4 4 4 4 4 4 . . . 
+    5 5 4 . . . . . . . . . . . . . 
+    5 4 . . . . . . . . . . . . . . 
+    4 . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Player))
+splitScreen.cameraFollowSprite(splitScreen.Camera.Camera1, mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.One)))
+mp.setPlayerSprite(mp.playerSelector(mp.PlayerNumber.Two), sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
-    . . . . e e e e e e e . . . . . 
-    . . . e e e e e e e e e . . . . 
-    . . e e e e e e e e e e e . . . 
-    . . e e e e e e e e e e e . . . 
-    . . e e e e e e e e e e e . . . 
-    . . e e e e e e e e e e e . . . 
-    . . e e e e e e e e e e e . . . 
-    . . e e e e e e e e e e e . . . 
-    . . e e e e e e e e e e e . . . 
-    . . . e e e e e e e e e . . . . 
-    . . . . e e e e e e e . . . . . 
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
-    `, SpriteKind.Player)
-tiles.placeOnTile(user, tiles.getTileLocation(1, 1))
-scene.cameraFollowSprite(user)
-controller.moveSprite(user, 100, 100)
-let flame1 = sprites.create(assets.image`myImage`, SpriteKind.Food)
-let flame2 = sprites.create(assets.image`myImage`, SpriteKind.Food)
-let flame3 = sprites.create(assets.image`myImage`, SpriteKind.Food)
-tiles.placeOnRandomTile(flame1, sprites.dungeon.floorLight2)
-tiles.placeOnRandomTile(flame2, sprites.dungeon.floorLight2)
-tiles.placeOnRandomTile(flame3, sprites.dungeon.floorLight2)
-flamelist = []
+    . . . . . 2 2 2 2 2 2 2 . . . . 
+    . . . . . 9 2 9 2 9 2 9 . . . . 
+    . . . . . 9 2 9 2 9 2 9 . . . . 
+    . . . . . 9 2 9 2 9 2 9 . . . . 
+    . 5 2 2 2 2 2 2 2 2 2 2 2 2 5 . 
+    . 2 2 2 2 2 2 2 2 2 2 2 2 2 2 . 
+    . 2 f f f 2 2 2 2 2 2 f f f 2 . 
+    . 2 f d f 2 2 2 2 2 2 f d f 2 . 
+    . . f f f . . . . . . f f f . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Player))
+splitScreen.cameraFollowSprite(splitScreen.Camera.Camera2, mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.Two)))
+mp.moveWithButtons(mp.playerSelector(mp.PlayerNumber.One))
+mp.moveWithButtons(mp.playerSelector(mp.PlayerNumber.Two))
+let Gasoline2 = sprites.create(assets.image`myImage`, SpriteKind.Food)
+let Gasoline3 = sprites.create(assets.image`myImage`, SpriteKind.Food)
+Gasoline1 = sprites.create(assets.image`myImage`, SpriteKind.Food)
+Flame1 = sprites.create(img`
+    . . . . . . f f f . . . . . . . 
+    . . . . . . f 8 f f . . . . . . 
+    . . . . . . f f 8 f f . f . . . 
+    . . . . . . . f 8 8 f . . . . . 
+    . . . . . . f f 8 9 8 f . . . . 
+    . . . . . . f 8 8 9 8 f . . . . 
+    . . . . . f f 8 9 9 8 f f . . . 
+    . . . . . f 8 9 9 9 8 8 f . . . 
+    . . . f f 8 9 9 9 1 9 8 f . . . 
+    . . f f 8 8 9 9 1 1 9 8 f f . . 
+    . f f 8 9 9 9 1 9 1 9 8 8 f . . 
+    . f 8 9 9 1 9 9 1 9 9 9 8 f . . 
+    . f 8 9 9 9 1 9 1 1 9 9 8 f . . 
+    . f 8 8 9 1 1 1 1 1 9 9 8 f . . 
+    . f f 8 9 9 1 1 1 1 9 8 8 f . . 
+    . . . f 8 9 1 1 1 9 9 8 f f . . 
+    `, SpriteKind.Nomnom)
+let Flame3 = sprites.create(img`
+    . . . . . . f f f . . . . . . . 
+    . . . . . . f 8 f f . . . . . . 
+    . . . . . . f f 8 f f . f . . . 
+    . . . . . . . f 8 8 f . . . . . 
+    . . . . . . f f 8 9 8 f . . . . 
+    . . . . . . f 8 8 9 8 f . . . . 
+    . . . . . f f 8 9 9 8 f f . . . 
+    . . . . . f 8 9 9 9 8 8 f . . . 
+    . . . f f 8 9 9 9 1 9 8 f . . . 
+    . . f f 8 8 9 9 1 1 9 8 f f . . 
+    . f f 8 9 9 9 1 9 1 9 8 8 f . . 
+    . f 8 9 9 1 9 9 1 9 9 9 8 f . . 
+    . f 8 9 9 9 1 9 1 1 9 9 8 f . . 
+    . f 8 8 9 1 1 1 1 1 9 9 8 f . . 
+    . f f 8 9 9 1 1 1 1 9 8 8 f . . 
+    . . . f 8 9 1 1 1 9 9 8 f f . . 
+    `, SpriteKind.Nomnom)
+let Flame2 = sprites.create(img`
+    . . . . . . f f f . . . . . . . 
+    . . . . . . f 8 f f . . . . . . 
+    . . . . . . f f 8 f f . f . . . 
+    . . . . . . . f 8 8 f . . . . . 
+    . . . . . . f f 8 9 8 f . . . . 
+    . . . . . . f 8 8 9 8 f . . . . 
+    . . . . . f f 8 9 9 8 f f . . . 
+    . . . . . f 8 9 9 9 8 8 f . . . 
+    . . . f f 8 9 9 9 1 9 8 f . . . 
+    . . f f 8 8 9 9 1 1 9 8 f f . . 
+    . f f 8 9 9 9 1 9 1 9 8 8 f . . 
+    . f 8 9 9 1 9 9 1 9 9 9 8 f . . 
+    . f 8 9 9 9 1 9 1 1 9 9 8 f . . 
+    . f 8 8 9 1 1 1 1 1 9 9 8 f . . 
+    . f f 8 9 9 1 1 1 1 9 8 8 f . . 
+    . . . f 8 9 1 1 1 9 9 8 f f . . 
+    `, SpriteKind.Nomnom)
+tiles.placeOnRandomTile(Gasoline2, sprites.dungeon.floorLight2)
+tiles.placeOnRandomTile(Gasoline3, sprites.dungeon.floorLight2)
+tiles.placeOnRandomTile(Gasoline1, sprites.dungeon.floorLight2)
+tiles.placeOnRandomTile(Flame1, sprites.dungeon.floorLight2)
+tiles.placeOnRandomTile(Flame2, sprites.dungeon.floorLight2)
+tiles.placeOnRandomTile(Flame3, sprites.dungeon.floorLight2)
+let flamelist: number[] = []
+let Gaslist: number[] = []
 let portal = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
-    . . . . . . b b b b b . . . . . 
-    . . . . b b b c c c b b b . . . 
-    . . . b b c c c c c c c b b . . 
-    . . . b c c f f f f f c c b . . 
-    . . b b c f f f f f f f c b b . 
-    . . b c c f f f f f f f c c b . 
-    . . b c c f f f f f f f c c b . 
-    . . b c c f f f f f f f c c b . 
-    . . b c c f f f f f f f c c b . 
-    . . b b c c f f f f f c c b b . 
-    . . . b b c c c c c c c b b . . 
-    . . . . b b c c c b b b b . . . 
-    . . . . . b b b b . . . . . . . 
+    . . . . . . c c c c c . . . . . 
+    . . . . c c c a a a a c c . . . 
+    . . . c a a a a a a a a a c . . 
+    . . . c a a f f f f f a a c . . 
+    . . c a a f f f f f f f a a c . 
+    . c a a a f f f f f f f a a c . 
+    . c a a a f f f f f f f a a c c 
+    . c a a a f f f f f f f a a a c 
+    . c a a a f f f f f f f a a a c 
+    . . c a a a f f f f f a a a a c 
+    . . c c a a a a a a a a a a c . 
+    . . . c a a a a a a a a a c . . 
+    . . . c c c a a a a c c c . . . 
+    . . . . . c c c c c . . . . . . 
+    `, MapConnectionKind.Door1)
+let Portal2 = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . c c c c c . . . . . 
+    . . . . c c c a a a c c c . . . 
+    . . . c c a a a a a a a c c . . 
+    . . . c a a f f f f f a a c . . 
+    . . c c a f f f f f f f a c c . 
+    . . c a a f f f f f f f a a c . 
+    . . c a a f f f f f f f a a c . 
+    . . c a a f f f f f f f a a c . 
+    . . c a a f f f f f f f a a c . 
+    . . c c a a f f f f f a a c c . 
+    . . . c c a a a a a a a c c . . 
+    . . . . c c a a a c c c c . . . 
+    . . . . . c c c c . . . . . . . 
     . . . . . . . . . . . . . . . . 
     `, MapConnectionKind.Door1)
 tiles.placeOnRandomTile(portal, sprites.dungeon.floorLight2)
+tiles.placeOnRandomTile(Portal2, sprites.dungeon.floorLight2)

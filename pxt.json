@@ -4,7 +4,9 @@
     "dependencies": {
         "device": "*",
         "arcade-tile-util": "github:microsoft/arcade-tile-util#v1.1.0",
-        "color-coded-tilemap": "*"
+        "color-coded-tilemap": "*",
+        "arcade-split-screen": "github:riknoll/arcade-split-screen#v0.0.3",
+        "multiplayer": "*"
     },
     "files": [
         "main.blocks",
