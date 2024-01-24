@@ -1,12 +1,10 @@
 namespace SpriteKind {
     export const Nomnom = SpriteKind.create()
-    export const portal = SpriteKind.create()
-    export const portal2 = SpriteKind.create()
 }
 function randommaze () {
     tiles.setCurrentTilemap(tilemap`level2`)
-    lastrow = 31
-    lastcolumn = 31
+    lastrow = 32
+    lastcolumn = 32
     cursor = sprites.create(img`
         . . . . . . . . . . . . . . . . 
         . f f f f f f f f f f f f f f . 
@@ -48,7 +46,7 @@ function randommaze () {
         }
         branch = cursor.tilemapLocation()
         while (candidatelocations.length > 0) {
-            pause(0)
+            pause(30)
             tiles.placeOnTile(cursor, candidatelocations.removeAt(randint(0, candidatelocations.length - 1)))
             count = 0
             if (cursor.tileKindAt(TileDirection.Top, sprites.dungeon.floorLight2)) {
@@ -63,7 +61,7 @@ function randommaze () {
             if (cursor.tileKindAt(TileDirection.Right, sprites.dungeon.floorLight2)) {
                 count += 1
             }
-            if (count == 1 || Math.percentChance(25) && count == 2) {
+            if (count == 1) {
                 visitedcells.push(branch)
                 visitedcells.push(cursor.tilemapLocation())
                 break;
@@ -76,16 +74,6 @@ function randommaze () {
         tiles.setWallAt(value, true)
     }
 }
-sprites.onOverlap(SpriteKind.Player, SpriteKind.portal, function (sprite, otherSprite) {
-    randommaze()
-    tiles.placeOnTile(mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.One)), tiles.getTileLocation(0, 0))
-    tiles.placeOnTile(mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.Two)), tiles.getTileLocation(0, 0))
-})
-sprites.onOverlap(SpriteKind.Player, SpriteKind.portal2, function (sprite, otherSprite) {
-    randommaze()
-    tiles.placeOnTile(mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.One)), tiles.getTileLocation(0, 0))
-    tiles.placeOnTile(mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.Two)), tiles.getTileLocation(0, 0))
-})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Nomnom, function (sprite, otherSprite) {
     if (sprite == mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.One)) && Flame1.image.equals(img`
         . . . . . . f f f . . . . . . . 
@@ -106,7 +94,6 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Nomnom, function (sprite, otherS
         . . . f 8 9 1 1 1 9 9 8 f f . . 
         `)) {
         sprites.destroy(otherSprite, effects.clouds, 100)
-        info.changeScoreBy(1)
     } else {
         mp.changePlayerStateBy(mp.playerSelector(mp.PlayerNumber.Two), MultiplayerState.score, 0)
     }
@@ -114,14 +101,8 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Nomnom, function (sprite, otherS
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     if (sprite == mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.Two)) && Gasoline1.image.equals(assets.image`myImage`)) {
         sprites.destroy(otherSprite, effects.halo, 100)
-        info.changeScoreBy(1)
     } else {
         mp.changePlayerStateBy(mp.playerSelector(mp.PlayerNumber.One), MultiplayerState.score, 0)
-    }
-})
-sprites.onOverlap(SpriteKind.Player, MapConnectionKind.Door1, function (sprite, otherSprite) {
-    if (true) {
-    	
     }
 })
 let wall_tile: tiles.Location[] = []
@@ -136,8 +117,6 @@ let lastcolumn = 0
 let lastrow = 0
 let Flame1: Sprite = null
 let Gasoline1: Sprite = null
-let Gaslist: number[] = []
-let flamelist: number[] = []
 tiles.setCurrentTilemap(tilemap`level3`)
 splitScreen.setSplitScreenEnabled(true)
 splitScreen.setCameraRegion(splitScreen.Camera.Camera1, splitScreen.CameraRegion.HorizontalTopHalf)
@@ -246,6 +225,8 @@ tiles.placeOnRandomTile(Gasoline1, sprites.dungeon.floorLight2)
 tiles.placeOnRandomTile(Flame1, sprites.dungeon.floorLight2)
 tiles.placeOnRandomTile(Flame2, sprites.dungeon.floorLight2)
 tiles.placeOnRandomTile(Flame3, sprites.dungeon.floorLight2)
+let flamelist: number[] = []
+let Gaslist: number[] = []
 let portal = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
@@ -263,7 +244,7 @@ let portal = sprites.create(img`
     . . . c a a a a a a a a a c . . 
     . . . c c c a a a a c c c . . . 
     . . . . . c c c c c . . . . . . 
-    `, SpriteKind.portal)
+    `, MapConnectionKind.Door1)
 let Portal2 = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
@@ -281,10 +262,6 @@ let Portal2 = sprites.create(img`
     . . . . c c a a a c c c c . . . 
     . . . . . c c c c . . . . . . . 
     . . . . . . . . . . . . . . . . 
-    `, SpriteKind.portal2)
+    `, MapConnectionKind.Door1)
 tiles.placeOnRandomTile(portal, sprites.dungeon.floorLight2)
 tiles.placeOnRandomTile(Portal2, sprites.dungeon.floorLight2)
-namespace userconfig {
-    export const ARCADE_SCREEN_WIDTH = 640
-    export const ARCADE_SCREEN_HEIGHT = 480
-}
