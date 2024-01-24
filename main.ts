@@ -3,8 +3,8 @@ namespace SpriteKind {
 }
 function randommaze () {
     tiles.setCurrentTilemap(tilemap`level2`)
-    lastrow = 32
-    lastcolumn = 32
+    lastrow = 31
+    lastcolumn = 31
     cursor = sprites.create(img`
         . . . . . . . . . . . . . . . . 
         . f f f f f f f f f f f f f f . 
@@ -29,7 +29,11 @@ function randommaze () {
     while (visitedcells.length > 0) {
         currentcell = visitedcells.pop()
         tiles.placeOnTile(cursor, currentcell)
-        tiles.setTileAt(currentcell, sprites.dungeon.floorLight2)
+        if (level == 1) {
+            tiles.setTileAt(currentcell, sprites.dungeon.floorLight2)
+        } else {
+            tiles.setTileAt(currentcell, sprites.castle.tilePath5)
+        }
         candidatelocations = []
         currentlocation = cursor.tilemapLocation()
         if (currentlocation.column < lastcolumn && cursor.tileKindAt(TileDirection.Right, assets.tile`transparency16`)) {
@@ -46,7 +50,6 @@ function randommaze () {
         }
         branch = cursor.tilemapLocation()
         while (candidatelocations.length > 0) {
-            pause(30)
             tiles.placeOnTile(cursor, candidatelocations.removeAt(randint(0, candidatelocations.length - 1)))
             count = 0
             if (cursor.tileKindAt(TileDirection.Top, sprites.dungeon.floorLight2)) {
@@ -61,7 +64,7 @@ function randommaze () {
             if (cursor.tileKindAt(TileDirection.Right, sprites.dungeon.floorLight2)) {
                 count += 1
             }
-            if (count == 1) {
+            if (count == 1 || Math.percentChance(25) && count == 2) {
                 visitedcells.push(branch)
                 visitedcells.push(cursor.tilemapLocation())
                 break;
@@ -70,7 +73,11 @@ function randommaze () {
     }
     wall_tile = tiles.getTilesByType(assets.tile`transparency16`)
     for (let value of wall_tile) {
-        tiles.setTileAt(value, sprites.builtin.forestTiles0)
+        if (level == 1) {
+            tiles.setTileAt(value, sprites.builtin.forestTiles0)
+        } else {
+            tiles.setTileAt(value, sprites.swamp.swampTile1)
+        }
         tiles.setWallAt(value, true)
     }
 }
@@ -115,8 +122,12 @@ let visitedcells: tiles.Location[] = []
 let cursor: Sprite = null
 let lastcolumn = 0
 let lastrow = 0
+let Doors = 0
+let Door = 0
 let Flame1: Sprite = null
 let Gasoline1: Sprite = null
+let level = 0
+level = game.askForNumber("Map 1 or 2?", 1)
 tiles.setCurrentTilemap(tilemap`level3`)
 splitScreen.setSplitScreenEnabled(true)
 splitScreen.setCameraRegion(splitScreen.Camera.Camera1, splitScreen.CameraRegion.HorizontalTopHalf)
@@ -225,8 +236,6 @@ tiles.placeOnRandomTile(Gasoline1, sprites.dungeon.floorLight2)
 tiles.placeOnRandomTile(Flame1, sprites.dungeon.floorLight2)
 tiles.placeOnRandomTile(Flame2, sprites.dungeon.floorLight2)
 tiles.placeOnRandomTile(Flame3, sprites.dungeon.floorLight2)
-let flamelist: number[] = []
-let Gaslist: number[] = []
 let portal = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
@@ -244,7 +253,7 @@ let portal = sprites.create(img`
     . . . c a a a a a a a a a c . . 
     . . . c c c a a a a c c c . . . 
     . . . . . c c c c c . . . . . . 
-    `, MapConnectionKind.Door1)
+    `, Door)
 let Portal2 = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
@@ -262,6 +271,7 @@ let Portal2 = sprites.create(img`
     . . . . c c a a a c c c c . . . 
     . . . . . c c c c . . . . . . . 
     . . . . . . . . . . . . . . . . 
-    `, MapConnectionKind.Door1)
+    `, Doors)
 tiles.placeOnRandomTile(portal, sprites.dungeon.floorLight2)
 tiles.placeOnRandomTile(Portal2, sprites.dungeon.floorLight2)
+randommaze()
