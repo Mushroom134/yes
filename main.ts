@@ -82,7 +82,7 @@ function randommaze () {
     }
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Nomnom, function (sprite, otherSprite) {
-    if (sprite == mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.One)) && Flame1.image.equals(img`
+    if (sprite == mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.One)) && otherSprite.image.equals(img`
         . . . . . . f f f . . . . . . . 
         . . . . . . f 8 f f . . . . . . 
         . . . . . . f f 8 f f . f . . . 
@@ -101,15 +101,13 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Nomnom, function (sprite, otherS
         . . . f 8 9 1 1 1 9 9 8 f f . . 
         `)) {
         sprites.destroy(otherSprite, effects.clouds, 100)
-    } else {
-        mp.changePlayerStateBy(mp.playerSelector(mp.PlayerNumber.Two), MultiplayerState.score, 0)
+        mp.changePlayerStateBy(mp.playerSelector(mp.PlayerNumber.One), MultiplayerState.score, 1)
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     if (sprite == mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.Two)) && Gasoline1.image.equals(assets.image`myImage`)) {
         sprites.destroy(otherSprite, effects.halo, 100)
-    } else {
-        mp.changePlayerStateBy(mp.playerSelector(mp.PlayerNumber.One), MultiplayerState.score, 0)
+        mp.changePlayerStateBy(mp.playerSelector(mp.PlayerNumber.Two), MultiplayerState.score, 1)
     }
 })
 let wall_tile: tiles.Location[] = []
@@ -124,7 +122,6 @@ let lastcolumn = 0
 let lastrow = 0
 let Doors = 0
 let Door = 0
-let Flame1: Sprite = null
 let Gasoline1: Sprite = null
 let level = 0
 level = game.askForNumber("Map 1 or 2?", 1)
@@ -176,7 +173,7 @@ mp.moveWithButtons(mp.playerSelector(mp.PlayerNumber.Two))
 let Gasoline2 = sprites.create(assets.image`myImage`, SpriteKind.Food)
 let Gasoline3 = sprites.create(assets.image`myImage`, SpriteKind.Food)
 Gasoline1 = sprites.create(assets.image`myImage`, SpriteKind.Food)
-Flame1 = sprites.create(img`
+let Flame1 = sprites.create(img`
     . . . . . . f f f . . . . . . . 
     . . . . . . f 8 f f . . . . . . 
     . . . . . . f f 8 f f . f . . . 
