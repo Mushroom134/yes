@@ -415,7 +415,7 @@ let visitedcells: tiles.Location[] = []
 let cursor: Sprite = null
 let lastcolumn = 0
 let lastrow = 0
-game.splash("Collect the corresponding flames or gas. Go through portals to a new map.")
+game.showLongText("Collect the corresponding flames or gas. Go through portals to a new map.", DialogLayout.Bottom)
 game.splash("First player to 6 wins!")
 tiles.setCurrentTilemap(tilemap`level3`)
 splitScreen.setSplitScreenEnabled(true)
