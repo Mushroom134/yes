@@ -71,13 +71,13 @@ function randommaze () {
     }
     mazetiles = tiles.getTilesByType(sprites.dungeon.floorLight2)
     wall_tile = tiles.getTilesByType(assets.tile`transparency16`)
-    if ((0 as any) == (2 as any)) {
+    if (level == 2) {
         for (let value of mazetiles) {
             tiles.setTileAt(value, sprites.castle.tilePath5)
         }
     }
     for (let value2 of wall_tile) {
-        if ((0 as any) == (1 as any)) {
+        if (level == 1) {
             tiles.setTileAt(value2, sprites.builtin.forestTiles0)
         } else {
             tiles.setTileAt(value2, sprites.swamp.swampTile1)
