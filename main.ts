@@ -31,11 +31,7 @@ function randommaze () {
     while (visitedcells.length > 0) {
         currentcell = visitedcells.pop()
         tiles.placeOnTile(cursor, currentcell)
-        if (level == 1) {
-            tiles.setTileAt(currentcell, sprites.dungeon.floorLight2)
-        } else {
-            tiles.setTileAt(currentcell, sprites.castle.tilePath5)
-        }
+        tiles.setTileAt(currentcell, sprites.dungeon.floorLight2)
         candidatelocations = []
         currentlocation = cursor.tilemapLocation()
         if (currentlocation.column < lastcolumn && cursor.tileKindAt(TileDirection.Right, assets.tile`transparency16`)) {
@@ -66,21 +62,27 @@ function randommaze () {
             if (cursor.tileKindAt(TileDirection.Right, sprites.dungeon.floorLight2)) {
                 count += 1
             }
-            if (count == 1 || Math.percentChance(25) && count == 2) {
+            if (count == 1 || Math.percentChance(15) && count == 2) {
                 visitedcells.push(branch)
                 visitedcells.push(cursor.tilemapLocation())
                 break;
             }
         }
     }
+    mazetiles = tiles.getTilesByType(sprites.dungeon.floorLight2)
     wall_tile = tiles.getTilesByType(assets.tile`transparency16`)
-    for (let value of wall_tile) {
-        if (level == 1) {
-            tiles.setTileAt(value, sprites.builtin.forestTiles0)
-        } else {
-            tiles.setTileAt(value, sprites.swamp.swampTile1)
+    if ((0 as any) == (2 as any)) {
+        for (let value of mazetiles) {
+            tiles.setTileAt(value, sprites.castle.tilePath5)
         }
-        tiles.setWallAt(value, true)
+    }
+    for (let value2 of wall_tile) {
+        if ((0 as any) == (1 as any)) {
+            tiles.setTileAt(value2, sprites.builtin.forestTiles0)
+        } else {
+            tiles.setTileAt(value2, sprites.swamp.swampTile1)
+        }
+        tiles.setWallAt(value2, true)
     }
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Door, function (sprite, otherSprite) {
@@ -235,12 +237,13 @@ let Flame1: Sprite = null
 let Gasoline1: Sprite = null
 let Gasoline3: Sprite = null
 let Gasoline2: Sprite = null
+let level = 0
 let wall_tile: tiles.Location[] = []
+let mazetiles: tiles.Location[] = []
 let count = 0
 let branch: tiles.Location = null
 let currentlocation: tiles.Location = null
 let candidatelocations: tiles.Location[] = []
-let level = 0
 let currentcell: tiles.Location = null
 let visitedcells: tiles.Location[] = []
 let cursor: Sprite = null
