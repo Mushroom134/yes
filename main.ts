@@ -71,16 +71,16 @@ function randommaze () {
     }
     mazetiles = tiles.getTilesByType(sprites.dungeon.floorLight2)
     wall_tile = tiles.getTilesByType(assets.tile`transparency16`)
-    if ((0 as any) == (2 as any)) {
+    if (level == 2) {
         for (let value of mazetiles) {
             tiles.setTileAt(value, sprites.castle.tilePath5)
         }
     }
     for (let value2 of wall_tile) {
-        if ((0 as any) == (1 as any)) {
-            tiles.setTileAt(value2, sprites.builtin.forestTiles0)
-        } else {
+        if (level == 2) {
             tiles.setTileAt(value2, sprites.swamp.swampTile1)
+        } else {
+            tiles.setTileAt(value2, sprites.builtin.forestTiles0)
         }
         tiles.setWallAt(value2, true)
     }
@@ -88,8 +88,162 @@ function randommaze () {
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Door, function (sprite, otherSprite) {
     level = game.askForNumber("Map 1 or 2?", 1)
     randommaze()
-    Spawn()
+    Spawn2()
 })
+function Spawn2 () {
+    sprites.destroyAllSpritesOfKind(SpriteKind.Food)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Nomnom)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Door)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Door2)
+    Gasoline2 = sprites.create(assets.image`myImage`, SpriteKind.Food)
+    Gasoline3 = sprites.create(assets.image`myImage`, SpriteKind.Food)
+    Gasoline1 = sprites.create(assets.image`myImage`, SpriteKind.Food)
+    Flame1 = sprites.create(img`
+        . . . . . . f f f . . . . . . . 
+        . . . . . . f 8 f f . . . . . . 
+        . . . . . . f f 8 f f . f . . . 
+        . . . . . . . f 8 8 f . . . . . 
+        . . . . . . f f 8 9 8 f . . . . 
+        . . . . . . f 8 8 9 8 f . . . . 
+        . . . . . f f 8 9 9 8 f f . . . 
+        . . . . . f 8 9 9 9 8 8 f . . . 
+        . . . f f 8 9 9 9 1 9 8 f . . . 
+        . . f f 8 8 9 9 1 1 9 8 f f . . 
+        . f f 8 9 9 9 1 9 1 9 8 8 f . . 
+        . f 8 9 9 1 9 9 1 9 9 9 8 f . . 
+        . f 8 9 9 9 1 9 1 1 9 9 8 f . . 
+        . f 8 8 9 1 1 1 1 1 9 9 8 f . . 
+        . f f 8 9 9 1 1 1 1 9 8 8 f . . 
+        . . . f 8 9 1 1 1 9 9 8 f f . . 
+        `, SpriteKind.Nomnom)
+    Flame3 = sprites.create(img`
+        . . . . . . f f f . . . . . . . 
+        . . . . . . f 8 f f . . . . . . 
+        . . . . . . f f 8 f f . f . . . 
+        . . . . . . . f 8 8 f . . . . . 
+        . . . . . . f f 8 9 8 f . . . . 
+        . . . . . . f 8 8 9 8 f . . . . 
+        . . . . . f f 8 9 9 8 f f . . . 
+        . . . . . f 8 9 9 9 8 8 f . . . 
+        . . . f f 8 9 9 9 1 9 8 f . . . 
+        . . f f 8 8 9 9 1 1 9 8 f f . . 
+        . f f 8 9 9 9 1 9 1 9 8 8 f . . 
+        . f 8 9 9 1 9 9 1 9 9 9 8 f . . 
+        . f 8 9 9 9 1 9 1 1 9 9 8 f . . 
+        . f 8 8 9 1 1 1 1 1 9 9 8 f . . 
+        . f f 8 9 9 1 1 1 1 9 8 8 f . . 
+        . . . f 8 9 1 1 1 9 9 8 f f . . 
+        `, SpriteKind.Nomnom)
+    Flame2 = sprites.create(img`
+        . . . . . . f f f . . . . . . . 
+        . . . . . . f 8 f f . . . . . . 
+        . . . . . . f f 8 f f . f . . . 
+        . . . . . . . f 8 8 f . . . . . 
+        . . . . . . f f 8 9 8 f . . . . 
+        . . . . . . f 8 8 9 8 f . . . . 
+        . . . . . f f 8 9 9 8 f f . . . 
+        . . . . . f 8 9 9 9 8 8 f . . . 
+        . . . f f 8 9 9 9 1 9 8 f . . . 
+        . . f f 8 8 9 9 1 1 9 8 f f . . 
+        . f f 8 9 9 9 1 9 1 9 8 8 f . . 
+        . f 8 9 9 1 9 9 1 9 9 9 8 f . . 
+        . f 8 9 9 9 1 9 1 1 9 9 8 f . . 
+        . f 8 8 9 1 1 1 1 1 9 9 8 f . . 
+        . f f 8 9 9 1 1 1 1 9 8 8 f . . 
+        . . . f 8 9 1 1 1 9 9 8 f f . . 
+        `, SpriteKind.Nomnom)
+    if (level == 1) {
+        tiles.placeOnRandomTile(Gasoline2, sprites.dungeon.floorLight2)
+        tiles.placeOnRandomTile(Gasoline3, sprites.dungeon.floorLight2)
+        tiles.placeOnRandomTile(Gasoline1, sprites.dungeon.floorLight2)
+        tiles.placeOnRandomTile(Flame1, sprites.dungeon.floorLight2)
+        tiles.placeOnRandomTile(Flame2, sprites.dungeon.floorLight2)
+        tiles.placeOnRandomTile(Flame3, sprites.dungeon.floorLight2)
+        portal = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . c c c c c . . . . . 
+            . . . . c c c a a a a c c . . . 
+            . . . c a a a a a a a a a c . . 
+            . . . c a a f f f f f a a c . . 
+            . . c a a f f f f f f f a a c . 
+            . c a a a f f f f f f f a a c . 
+            . c a a a f f f f f f f a a c c 
+            . c a a a f f f f f f f a a a c 
+            . c a a a f f f f f f f a a a c 
+            . . c a a a f f f f f a a a a c 
+            . . c c a a a a a a a a a a c . 
+            . . . c a a a a a a a a a c . . 
+            . . . c c c a a a a c c c . . . 
+            . . . . . c c c c c . . . . . . 
+            `, SpriteKind.Door)
+        Portal2 = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . c c c c c . . . . . 
+            . . . . c c c a a a c c c . . . 
+            . . . c c a a a a a a a c c . . 
+            . . . c a a f f f f f a a c . . 
+            . . c c a f f f f f f f a c c . 
+            . . c a a f f f f f f f a a c . 
+            . . c a a f f f f f f f a a c . 
+            . . c a a f f f f f f f a a c . 
+            . . c a a f f f f f f f a a c . 
+            . . c c a a f f f f f a a c c . 
+            . . . c c a a a a a a a c c . . 
+            . . . . c c a a a c c c c . . . 
+            . . . . . c c c c . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.Door2)
+        tiles.placeOnRandomTile(portal, sprites.dungeon.floorLight2)
+        tiles.placeOnRandomTile(Portal2, sprites.dungeon.floorLight2)
+    } else {
+        tiles.placeOnRandomTile(Gasoline2, sprites.castle.tilePath5)
+        tiles.placeOnRandomTile(Gasoline3, sprites.castle.tilePath5)
+        tiles.placeOnRandomTile(Gasoline1, sprites.castle.tilePath5)
+        tiles.placeOnRandomTile(Flame1, sprites.castle.tilePath5)
+        tiles.placeOnRandomTile(Flame2, sprites.castle.tilePath5)
+        tiles.placeOnRandomTile(Flame3, sprites.castle.tilePath5)
+        portal = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . c c c c c . . . . . 
+            . . . . c c c a a a a c c . . . 
+            . . . c a a a a a a a a a c . . 
+            . . . c a a f f f f f a a c . . 
+            . . c a a f f f f f f f a a c . 
+            . c a a a f f f f f f f a a c . 
+            . c a a a f f f f f f f a a c c 
+            . c a a a f f f f f f f a a a c 
+            . c a a a f f f f f f f a a a c 
+            . . c a a a f f f f f a a a a c 
+            . . c c a a a a a a a a a a c . 
+            . . . c a a a a a a a a a c . . 
+            . . . c c c a a a a c c c . . . 
+            . . . . . c c c c c . . . . . . 
+            `, SpriteKind.Door)
+        Portal2 = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . c c c c c . . . . . 
+            . . . . c c c a a a c c c . . . 
+            . . . c c a a a a a a a c c . . 
+            . . . c a a f f f f f a a c . . 
+            . . c c a f f f f f f f a c c . 
+            . . c a a f f f f f f f a a c . 
+            . . c a a f f f f f f f a a c . 
+            . . c a a f f f f f f f a a c . 
+            . . c a a f f f f f f f a a c . 
+            . . c c a a f f f f f a a c c . 
+            . . . c c a a a a a a a c c . . 
+            . . . . c c a a a c c c c . . . 
+            . . . . . c c c c . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.Door2)
+        tiles.placeOnRandomTile(portal, sprites.castle.tilePath5)
+        tiles.placeOnRandomTile(Portal2, sprites.castle.tilePath5)
+    }
+}
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Nomnom, function (sprite, otherSprite) {
     if (sprite == mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.One)) && otherSprite.image.equals(img`
         . . . . . . f f f . . . . . . . 
@@ -109,13 +263,20 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Nomnom, function (sprite, otherS
         . f f 8 9 9 1 1 1 1 9 8 8 f . . 
         . . . f 8 9 1 1 1 9 9 8 f f . . 
         `)) {
-        sprites.destroy(otherSprite, effects.clouds, 100)
+        sprites.destroy(otherSprite, effects.fire, 100)
         mp.changePlayerStateBy(mp.playerSelector(mp.PlayerNumber.One), MultiplayerState.score, 1)
+        mp.changePlayerStateBy(mp.playerSelector(mp.PlayerNumber.Two), MultiplayerState.score, 0)
+    }
+    if (mp.getPlayerState(mp.playerSelector(mp.PlayerNumber.One), MultiplayerState.score) == 6) {
+        game.setGameOverMessage(true, "PLAYER 1 WINS!")
+        game.gameOver(true)
     }
 })
 function Spawn () {
     sprites.destroyAllSpritesOfKind(SpriteKind.Food)
     sprites.destroyAllSpritesOfKind(SpriteKind.Nomnom)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Door)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Door2)
     Gasoline2 = sprites.create(assets.image`myImage`, SpriteKind.Food)
     Gasoline3 = sprites.create(assets.image`myImage`, SpriteKind.Food)
     Gasoline1 = sprites.create(assets.image`myImage`, SpriteKind.Food)
@@ -220,14 +381,19 @@ function Spawn () {
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     if (sprite == mp.getPlayerSprite(mp.playerSelector(mp.PlayerNumber.Two)) && otherSprite.image.equals(assets.image`myImage`)) {
-        sprites.destroy(otherSprite, effects.halo, 100)
+        sprites.destroy(otherSprite, effects.fire, 100)
         mp.changePlayerStateBy(mp.playerSelector(mp.PlayerNumber.Two), MultiplayerState.score, 1)
+        mp.changePlayerStateBy(mp.playerSelector(mp.PlayerNumber.One), MultiplayerState.score, 0)
+    }
+    if (mp.getPlayerState(mp.playerSelector(mp.PlayerNumber.Two), MultiplayerState.score) == 6) {
+        game.setGameOverMessage(true, "PLAYER 2 WINS!")
+        game.gameOver(true)
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Door2, function (sprite, otherSprite) {
     level = game.askForNumber("Map 1 or 2?", 1)
     randommaze()
-    Spawn()
+    Spawn2()
 })
 let Portal2: Sprite = null
 let portal: Sprite = null
@@ -249,10 +415,8 @@ let visitedcells: tiles.Location[] = []
 let cursor: Sprite = null
 let lastcolumn = 0
 let lastrow = 0
-namespace userconfig{
-    export const ARCADE_SCREEN_WIDTH = 640
-    export const ARCADE_SCREEN_HEIGHT = 480
-}
+game.splash("Collect the corresponding flames or gas. Go through portals to a new map.")
+game.splash("First player to 6 wins!")
 tiles.setCurrentTilemap(tilemap`level3`)
 splitScreen.setSplitScreenEnabled(true)
 splitScreen.setCameraRegion(splitScreen.Camera.Camera1, splitScreen.CameraRegion.HorizontalTopHalf)
