@@ -31,11 +31,7 @@ function randommaze () {
     while (visitedcells.length > 0) {
         currentcell = visitedcells.pop()
         tiles.placeOnTile(cursor, currentcell)
-        if (level == 1) {
-            tiles.setTileAt(currentcell, sprites.dungeon.floorLight2)
-        } else {
-            tiles.setTileAt(currentcell, sprites.castle.tilePath5)
-        }
+        tiles.setTileAt(currentcell, sprites.dungeon.floorLight2)
         candidatelocations = []
         currentlocation = cursor.tilemapLocation()
         if (currentlocation.column < lastcolumn && cursor.tileKindAt(TileDirection.Right, assets.tile`transparency16`)) {
@@ -66,11 +62,17 @@ function randommaze () {
             if (cursor.tileKindAt(TileDirection.Right, sprites.dungeon.floorLight2)) {
                 count += 1
             }
-            if (count == 1 || Math.percentChance(25) && count == 2) {
+            if (count == 1 || Math.percentChance(15) && count == 2) {
                 visitedcells.push(branch)
                 visitedcells.push(cursor.tilemapLocation())
                 break;
             }
+        }
+    }
+    mazetiles = tiles.getTilesByType(sprites.dungeon.floorLight2)
+    if (level == 2) {
+        for (let value of mazetiles) {
+            tiles.setTileAt(value, sprites.castle.tilePath5)
         }
     }
     wall_tile = tiles.getTilesByType(assets.tile`transparency16`)
@@ -236,6 +238,7 @@ let Gasoline1: Sprite = null
 let Gasoline3: Sprite = null
 let Gasoline2: Sprite = null
 let wall_tile: tiles.Location[] = []
+let mazetiles: tiles.Location[] = []
 let count = 0
 let branch: tiles.Location = null
 let currentlocation: tiles.Location = null
