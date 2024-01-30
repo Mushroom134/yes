@@ -3,7 +3,7 @@ namespace SpriteKind {
     export const Door2 = SpriteKind.create()
     export const Door = SpriteKind.create()
 }
-function randommaze () {
+function randommaze (level: number) {
     tiles.setCurrentTilemap(tilemap`level2`)
     lastrow = 31
     lastcolumn = 31
@@ -87,7 +87,10 @@ function randommaze () {
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Door, function (sprite, otherSprite) {
     level = game.askForNumber("Map 1 or 2?", 1)
-    randommaze()
+    while (!(level >= 1 && level <= 2)) {
+        level = game.askForNumber("Map 1 or 2?", 1)
+    }
+    randommaze(level)
     Spawn2()
 })
 function Spawn2 () {
@@ -392,7 +395,10 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Door2, function (sprite, otherSprite) {
     level = game.askForNumber("Map 1 or 2?", 1)
-    randommaze()
+    while (!(level >= 1 && level <= 2)) {
+        level = game.askForNumber("Map 1 or 2?", 1)
+    }
+    randommaze(level)
     Spawn2()
 })
 let Portal2: Sprite = null
